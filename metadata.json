@@ -1,0 +1,6 @@
+{
+  "name": "Tas Grãos",
+  "description": "Aplicativo mobile premium de e-commerce e bem-estar para produtos naturais e cereais a granel Tas Grãos",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
