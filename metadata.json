@@ -1,6 +1,6 @@
 {
   "name": "Tas Grãos",
-  "description": "Aplicativo mobile premium de e-commerce e bem-estar para produtos naturais e cereais a granel Tas Grãos",
+  "description": "Aplicativo mobile premium de e-commerce e bem-estar para produtos naturais e cereais a granel Tas Grãos, com catálogo exclusivo de receitas culinárias saudáveis.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }

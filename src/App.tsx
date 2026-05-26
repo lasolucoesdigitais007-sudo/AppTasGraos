@@ -13,6 +13,7 @@ import {
   MessageSquare, 
   Sparkles, 
   Star, 
+  BookOpen, 
   Info, 
   Bell, 
   Compass, 
@@ -54,14 +55,14 @@ import {
   INITIAL_RECIPES, 
   EDUCATIONAL_ARTICLES 
 } from './data';
-import NutritionistAI from './components/NutritionistAI';
+import RecipesSection from './components/RecipesSection';
 import { signInWithPopup, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile, signOut } from 'firebase/auth';
 import { auth, googleProvider } from './lib/firebase';
 
 // High-fidelity generated assets
 const HERO_IMAGE_PATH = '/src/assets/images/tasgraos_hero_1779476648103.png';
 const TEA_IMAGE_PATH = '/src/assets/images/tasgraos_tea_1779476665226.png';
-const LOGO_IMAGE_PATH = '/src/assets/images/tasgraos_logo_1779553558389.png';
+const LOGO_IMAGE_PATH = '/src/assets/images/tasgraos_logo_transparent_processed.png';
 
 // Custom high-fidelity brand WhatsApp logo icon
 const MessageCircleWhatsApp = ({ className = "h-5 w-5" }: { className?: string }) => (
@@ -488,10 +489,10 @@ export default function App() {
                     <img 
                       src={LOGO_IMAGE_PATH} 
                       alt="Tas Grãos Logo" 
-                      className="h-14 w-auto object-contain mix-blend-multiply"
+                      className="h-16 w-auto object-contain"
                       referrerPolicy="no-referrer"
                     />
-                    <p className="text-xs text-tas-terroir opacity-80">Sua Dose Diária de Saúde e Vitalidade</p>
+                    <p className="text-xs text-tas-terroir opacity-80 font-medium">Sua Dose Diária de Saúde e Vitalidade</p>
                   </div>
 
                   {/* Form Container */}
@@ -775,7 +776,7 @@ export default function App() {
                           <img 
                             src={LOGO_IMAGE_PATH} 
                             alt="Tas Grãos" 
-                            className="h-10 w-auto object-contain mix-blend-multiply" 
+                            className="h-12 w-auto object-contain" 
                             referrerPolicy="no-referrer"
                           />
                         </div>
@@ -785,7 +786,7 @@ export default function App() {
                           {currentView === ActiveView.PRODUCT_DETAIL && 'Detalhes do Grão'}
                           {currentView === ActiveView.CART && 'Carrinho de Saúde'}
                           {currentView === ActiveView.CHECKOUT && 'Finalizando Pedido'}
-                          {currentView === ActiveView.RECIPES && 'Culinária Natural'}
+                          {currentView === ActiveView.RECIPES && 'Receitas Saudáveis'}
                           {currentView === ActiveView.BENEFICIOS && 'Benefícios & Saúde'}
                           {currentView === ActiveView.FAVORITES && 'Meus Preferidos'}
                           {currentView === ActiveView.PROFILE && 'MINHA CONTA'}
@@ -1633,82 +1634,14 @@ export default function App() {
                     </motion.div>
                   )}
 
-                  {/* RECIPES & INTUITIVE AI KITCHEN SCREEN */}
+                  {/* RECIPES & INTUITIVE PREMIUM KITCHEN SCREEN */}
                   {currentView === ActiveView.RECIPES && (
-                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 pb-20 text-left">
-                      
-                      {/* AI Nutritive Recipe generation hook */}
-                      <NutritionistAI 
-                        allProducts={products}
-                        onAddProductToCartByProductId={handleAddProductToCartByProductId}
+                    <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="space-y-6 text-left">
+                      <RecipesSection 
+                        products={products}
+                        onAddProductToCart={handleAddProductToCart}
+                        onSetProducts={setProducts}
                       />
-
-                      <div>
-                        <h3 className="font-serif text-lg text-tas-dark font-black mb-3">Receitas do Nosso Acervo</h3>
-                        
-                        <div className="space-y-4.5">
-                          {recipes.map((recipe) => (
-                            <div 
-                              key={recipe.id}
-                              className="bg-white rounded-[2rem] border border-tas-bege/60 shadow-xs overflow-hidden flex flex-col justify-between"
-                            >
-                              <div className="relative h-40 bg-tas-bege">
-                                <img 
-                                  src={recipe.image} 
-                                  alt={recipe.title} 
-                                  className="w-full h-full object-cover"
-                                  referrerPolicy="no-referrer"
-                                />
-                                <span className="absolute top-3 left-3 bg-white/95 text-tas-dark text-[9px] font-extrabold tracking-wide px-2.5 py-1 rounded-full uppercase">
-                                  {recipe.prepTime}
-                                </span>
-                              </div>
-
-                              <div className="p-4 text-left">
-                                <h4 className="font-serif text-base text-tas-dark font-bold leading-tight mb-2">
-                                  {recipe.title}
-                                </h4>
-
-                                <div className="flex gap-2 text-[10px] text-tas-terroir font-semibold mb-3">
-                                  <span className="bg-tas-bege px-2 py-0.5 rounded-lg">🔥 {recipe.calories}</span>
-                                  <span className="bg-tas-bege px-2 py-0.5 rounded-lg">⚙️ {recipe.difficulty}</span>
-                                </div>
-
-                                <div className="space-y-2 mb-4 bg-tas-cream rounded-xl p-3 border border-tas-bege/70">
-                                  <p className="text-[10px] font-bold text-tas-dark uppercase tracking-wider">Ingredientes da Loja Tas Grãos:</p>
-                                  <ul className="space-y-1 text-xs text-tas-dark">
-                                    {recipe.ingredients.map((ing, i) => (
-                                      <li key={i} className="flex justify-between items-center text-[11px] font-medium">
-                                        <span>• {ing.name} ({ing.amount})</span>
-                                        {ing.isAvailableInStore && (
-                                          <span className="text-[9px] text-tas-olive uppercase font-bold">Disponível</span>
-                                        )}
-                                      </li>
-                                    ))}
-                                  </ul>
-                                </div>
-
-                                <button 
-                                  onClick={() => {
-                                    let added = 0;
-                                    recipe.ingredients.forEach(ing => {
-                                      if (ing.isAvailableInStore && ing.productId) {
-                                        handleAddProductToCartByProductId(ing.productId, 250);
-                                        added++;
-                                      }
-                                    });
-                                    alert(`${added} ingredientes da receita foram incluídos no carrinho! 🛒🌱`);
-                                  }}
-                                  className="touch-ripple w-full py-3 bg-tas-gold hover:bg-tas-gold-dark text-white rounded-xl text-xs font-bold"
-                                >
-                                  Comprar Ingredientes
-                                </button>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
                     </motion.div>
                   )}
 
@@ -2981,13 +2914,13 @@ export default function App() {
                     {currentView === ActiveView.CATEGORIES && <span className="absolute -bottom-1 h-1.5 w-1.5 bg-tas-gold rounded-full"></span>}
                   </button>
 
-                  {/* Recipes AI tab button */}
+                  {/* Recipes tab button */}
                   <button 
                     onClick={() => { setSelectedProduct(null); setSelectedArticle(null); setCurrentView(ActiveView.RECIPES); }}
                     className={`flex flex-col items-center gap-1 py-1 transition-colors relative cursor-pointer ${currentView === ActiveView.RECIPES ? 'text-tas-gold font-bold' : 'text-tas-terroir-light/80 hover:text-tas-dark'}`}
                   >
-                    <Sparkles className="h-5.5 w-5.5" />
-                    <span className="text-[9px] tracking-tight">Receitas AI</span>
+                    <BookOpen className="h-5.5 w-5.5" />
+                    <span className="text-[9px] tracking-tight">Receitas</span>
                     {currentView === ActiveView.RECIPES && <span className="absolute -bottom-1 h-1.5 w-1.5 bg-tas-gold rounded-full"></span>}
                   </button>
 
